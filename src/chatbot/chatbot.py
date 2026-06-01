@@ -1,14 +1,17 @@
 import os
 import sys
-from typing import List, Dict
+import json
+from typing import Any, Dict, List, Optional
 from dotenv import load_dotenv
 
 # Allow running from project root
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 
 from src.core.gemini_provider import GeminiProvider
+from src.core.llm_provider import LLMProvider
+from src.tools.course_registration_tools import check_slots, get_tuition
 
-SYSTEM_PROMPT = """You are a helpful and professional university registration advisor at Green Valley University.
+SYSTEM_PROMPT = """You are a helpful and professional university registration advisor at VinUniversity.
 Your role is to assist students with all course registration-related questions and problems.
 
 UNIVERSITY REGISTRATION POLICIES:
@@ -44,13 +47,44 @@ BEHAVIOR GUIDELINES:
 - If a problem requires action from a specific office, tell the student exactly which office to contact and how.
 - Do not guess at policies. If you are unsure, advise the student to contact the Registrar's Office directly.
 - Keep responses concise and friendly. Use bullet points or numbered steps when listing instructions.
+- When TOOL CONTEXT is provided, use it as the source of truth for course availability, tuition, fees, and student-specific data.
+- Do not claim a course has seats or quote tuition unless TOOL CONTEXT contains that information.
 """
 
 
 class UniversityRegistrationChatbot:
-    def __init__(self, api_key: str = None, model_name: str = "gemini-1.5-flash"):
-        self.llm = GeminiProvider(model_name=model_name, api_key=api_key)
+    def __init__(
+        self,
+        api_key: str = None,
+        model_name: str = "gemini-1.5-flash",
+        llm: Optional[LLMProvider] = None,
+        default_student_id: str = "2A202600713",
+    ):
+        self.llm = llm or GeminiProvider(model_name=model_name, api_key=api_key)
         self.history: List[Dict[str, str]] = []
+        self.default_student_id = default_student_id
+
+    def _build_tool_context(self, user_message: str) -> Dict[str, Any]:
+        """
+        Ground the chatbot with course registration data without turning it into
+        a ReAct agent. The chatbot receives tool outputs as context, but it does
+        not choose actions step-by-step.
+        """
+        slots = check_slots(user_message)
+        context: Dict[str, Any] = {"check_slots": slots}
+
+        course_codes = [
+            course["course_code"]
+            for course in slots.get("courses", [])
+            if course.get("course_code")
+        ]
+        if course_codes:
+            context["get_tuition"] = get_tuition(
+                course_codes,
+                student_id=self.default_student_id,
+            )
+
+        return context
 
     def _build_prompt(self, user_message: str) -> str:
         """Format conversation history + new user message into a single prompt string."""
@@ -59,6 +93,9 @@ class UniversityRegistrationChatbot:
             role = "Student" if turn["role"] == "user" else "Advisor"
             lines.append(f"{role}: {turn['content']}")
         lines.append(f"Student: {user_message}")
+        tool_context = self._build_tool_context(user_message)
+        lines.append("TOOL CONTEXT:")
+        lines.append(json.dumps(tool_context, ensure_ascii=False, indent=2))
         lines.append("Advisor:")
         return "\n".join(lines)
 
@@ -85,7 +122,7 @@ def main():
     chatbot = UniversityRegistrationChatbot(api_key=api_key)
 
     print("=" * 60)
-    print("  Green Valley University — Course Registration Advisor")
+    print("  VinUniversity — Course Registration Advisor")
     print("=" * 60)
     print("Hello! I'm your registration advisor. How can I help you")
     print("with course registration today?")
