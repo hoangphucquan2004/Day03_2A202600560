@@ -72,16 +72,28 @@ def test_react_agent_runs_full_registration_flow():
 
 
 def test_react_agent_handles_unknown_tool_as_failure_trace():
+    """Test that agent SELF-CORRECTS from hallucinated tool: tries search_course, fails, then uses check_slots."""
     llm = ScriptedLLM(
         [
+            # Step 1: Agent hallucinates non-existent tool
             'Thought: I will call a tool that does not exist.\n'
             'Action: search_course({"query": "AI"})',
-            "Thought: The observation says the tool does not exist.\n"
-            "Final Answer: I cannot use that tool, so I should call check_slots instead.",
+            # Step 2: Agent self-corrects - sees error + available_tools, tries correct tool
+            'Thought: The tool search_course does not exist. Looking at the error observation, I can see available tools are check_slots and get_tuition. Let me use check_slots instead.\n'
+            'Action: check_slots({"course_query": "AI"})',
+            # Step 3: Agent now gets tuition for the course
+            'Thought: I got the slot information. Now I need tuition.\n'
+            'Action: get_tuition({"course_code": "AI3010", "student_id": "2A202600713"})',
+            # Step 4: Agent provides final answer
+            "Thought: I have slots and tuition information.\n"
+            "Final Answer: AI3010 has available seats. The estimated tuition is 9,100,000 VND.",
         ]
     )
-    agent = ReActAgent(llm=llm, tools=get_course_registration_tools(), max_steps=3)
+    agent = ReActAgent(llm=llm, tools=get_course_registration_tools(), max_steps=5)
 
-    answer = agent.run("Check AI slots")
+    answer = agent.run("Check AI slots and tuition")
 
-    assert "check_slots" in answer
+    # Verify agent actually CALLED the tools (not just mentioned them)
+    assert "9,100,000" in answer, "Agent should have called get_tuition and returned tuition cost"
+    assert "available" in answer.lower(), "Agent should have called check_slots and returned availability"
+    assert llm.calls == 4, f"Agent should have called LLM 4 times (hallucinate, correct, get_tuition, final), got {llm.calls}"
