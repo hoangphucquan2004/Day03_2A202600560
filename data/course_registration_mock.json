@@ -1,0 +1,858 @@
+{
+  "metadata": {
+    "dataset_name": "Student Course Registration Assistant Mock Data",
+    "institution": "VinUniversity",
+    "term": "Fall 2026",
+    "currency": "VND",
+    "last_updated": "2026-06-01",
+    "purpose": "Mock data for ReAct tools: check_slots, get_tuition, register"
+  },
+  "tool_contracts": {
+    "check_slots": {
+      "input_fields": [
+        "course_query",
+        "term"
+      ],
+      "lookup_keys": [
+        "course_code",
+        "aliases",
+        "title"
+      ],
+      "returns": [
+        "course_code",
+        "title",
+        "sections",
+        "availability_status",
+        "warnings"
+      ]
+    },
+    "get_tuition": {
+      "input_fields": [
+        "course_code",
+        "student_id"
+      ],
+      "returns": [
+        "base_tuition",
+        "fees",
+        "estimated_total"
+      ]
+    },
+    "register": {
+      "input_fields": [
+        "student_id",
+        "section_ids",
+        "confirm_payment"
+      ],
+      "returns": [
+        "registration_status",
+        "registered_sections",
+        "waitlisted_sections",
+        "errors"
+      ]
+    }
+  },
+  "students": [
+    {
+      "student_id": "2A202600713",
+      "full_name": "Hai Dang Minh",
+      "program": "Computer Science",
+      "year": 2,
+      "gpa": 3.72,
+      "credits_completed": 42,
+      "account_status": "active",
+      "tuition_category": "domestic",
+      "completed_courses": [
+        "MATH1010",
+        "COMP1010",
+        "STAT2010",
+        "DATA1010"
+      ],
+      "current_registrations": [
+        "COMP2030-01"
+      ],
+      "holds": []
+    },
+    {
+      "student_id": "2A202600845",
+      "full_name": "Linh Tran",
+      "program": "Data Science",
+      "year": 3,
+      "gpa": 3.91,
+      "credits_completed": 78,
+      "account_status": "active",
+      "tuition_category": "domestic",
+      "completed_courses": [
+        "MATH1010",
+        "COMP1010",
+        "STAT2010",
+        "DATA1010",
+        "AI2010"
+      ],
+      "current_registrations": [],
+      "holds": []
+    },
+    {
+      "student_id": "2A202601102",
+      "full_name": "Alex Park",
+      "program": "Business Analytics",
+      "year": 1,
+      "gpa": 3.15,
+      "credits_completed": 18,
+      "account_status": "active",
+      "tuition_category": "international",
+      "completed_courses": [
+        "MATH1010"
+      ],
+      "current_registrations": [
+        "BUS1010-02"
+      ],
+      "holds": []
+    },
+    {
+      "student_id": "2A202600999",
+      "full_name": "Bao Pham",
+      "program": "Computer Science",
+      "year": 2,
+      "gpa": 2.84,
+      "credits_completed": 39,
+      "account_status": "blocked",
+      "tuition_category": "domestic",
+      "completed_courses": [
+        "MATH1010",
+        "COMP1010"
+      ],
+      "current_registrations": [],
+      "holds": [
+        {
+          "hold_code": "FINANCE_BALANCE",
+          "description": "Outstanding tuition balance must be cleared before new registration."
+        }
+      ]
+    }
+  ],
+  "courses": [
+    {
+      "course_code": "AI3010",
+      "title": "Artificial Intelligence",
+      "aliases": [
+        "AI",
+        "Intro to AI",
+        "Artificial Intelligence"
+      ],
+      "department": "College of Engineering and Computer Science",
+      "credits": 3,
+      "level": "undergraduate",
+      "description": "Core concepts in search, reasoning, machine learning, and intelligent agents.",
+      "prerequisites": [
+        "COMP1010",
+        "MATH1010"
+      ],
+      "recommended_background": [
+        "STAT2010"
+      ],
+      "tags": [
+        "ai",
+        "agent",
+        "reasoning",
+        "machine-learning"
+      ],
+      "sections": [
+        {
+          "section_id": "AI3010-01",
+          "instructor": "Dr. Nguyen An",
+          "schedule": [
+            {
+              "day": "Monday",
+              "start": "09:00",
+              "end": "10:30",
+              "room": "I-304"
+            },
+            {
+              "day": "Wednesday",
+              "start": "09:00",
+              "end": "10:30",
+              "room": "I-304"
+            }
+          ],
+          "capacity": 40,
+          "enrolled": 36,
+          "waitlist_capacity": 10,
+          "waitlisted": 2,
+          "reserved_seats": {
+            "Computer Science": 4,
+            "Data Science": 2
+          },
+          "status": "open"
+        },
+        {
+          "section_id": "AI3010-02",
+          "instructor": "Dr. Maria Le",
+          "schedule": [
+            {
+              "day": "Tuesday",
+              "start": "14:00",
+              "end": "15:30",
+              "room": "I-502"
+            },
+            {
+              "day": "Thursday",
+              "start": "14:00",
+              "end": "15:30",
+              "room": "I-502"
+            }
+          ],
+          "capacity": 35,
+          "enrolled": 35,
+          "waitlist_capacity": 8,
+          "waitlisted": 4,
+          "reserved_seats": {},
+          "status": "waitlist_only"
+        }
+      ],
+      "tuition": {
+        "domestic_per_credit": 2800000,
+        "international_per_credit": 4200000,
+        "lab_fee": 500000,
+        "material_fee": 200000
+      }
+    },
+    {
+      "course_code": "DATA3020",
+      "title": "Data Science",
+      "aliases": [
+        "Data Science",
+        "DS",
+        "Intro Data Science"
+      ],
+      "department": "College of Engineering and Computer Science",
+      "credits": 3,
+      "level": "undergraduate",
+      "description": "Data collection, cleaning, modeling, visualization, and communication for decision making.",
+      "prerequisites": [
+        "STAT2010",
+        "DATA1010"
+      ],
+      "recommended_background": [
+        "COMP1010"
+      ],
+      "tags": [
+        "data-science",
+        "statistics",
+        "visualization",
+        "analytics"
+      ],
+      "sections": [
+        {
+          "section_id": "DATA3020-01",
+          "instructor": "Dr. Tran Binh",
+          "schedule": [
+            {
+              "day": "Monday",
+              "start": "11:00",
+              "end": "12:30",
+              "room": "I-401"
+            },
+            {
+              "day": "Wednesday",
+              "start": "11:00",
+              "end": "12:30",
+              "room": "I-401"
+            }
+          ],
+          "capacity": 45,
+          "enrolled": 44,
+          "waitlist_capacity": 12,
+          "waitlisted": 1,
+          "reserved_seats": {
+            "Data Science": 3
+          },
+          "status": "open"
+        },
+        {
+          "section_id": "DATA3020-02",
+          "instructor": "Dr. Sarah Hoang",
+          "schedule": [
+            {
+              "day": "Friday",
+              "start": "08:30",
+              "end": "11:30",
+              "room": "I-201"
+            }
+          ],
+          "capacity": 30,
+          "enrolled": 28,
+          "waitlist_capacity": 6,
+          "waitlisted": 0,
+          "reserved_seats": {},
+          "status": "open"
+        }
+      ],
+      "tuition": {
+        "domestic_per_credit": 3000000,
+        "international_per_credit": 4500000,
+        "lab_fee": 800000,
+        "material_fee": 250000
+      }
+    },
+    {
+      "course_code": "ML4010",
+      "title": "Machine Learning",
+      "aliases": [
+        "ML",
+        "Machine Learning"
+      ],
+      "department": "College of Engineering and Computer Science",
+      "credits": 4,
+      "level": "undergraduate",
+      "description": "Supervised and unsupervised learning, model selection, evaluation, and deployment basics.",
+      "prerequisites": [
+        "AI3010",
+        "STAT2010"
+      ],
+      "recommended_background": [
+        "DATA3020"
+      ],
+      "tags": [
+        "machine-learning",
+        "modeling",
+        "python"
+      ],
+      "sections": [
+        {
+          "section_id": "ML4010-01",
+          "instructor": "Dr. Pham Khoa",
+          "schedule": [
+            {
+              "day": "Tuesday",
+              "start": "09:00",
+              "end": "11:00",
+              "room": "I-305"
+            },
+            {
+              "day": "Thursday",
+              "start": "09:00",
+              "end": "11:00",
+              "room": "I-305"
+            }
+          ],
+          "capacity": 35,
+          "enrolled": 35,
+          "waitlist_capacity": 10,
+          "waitlisted": 10,
+          "reserved_seats": {},
+          "status": "closed"
+        }
+      ],
+      "tuition": {
+        "domestic_per_credit": 3200000,
+        "international_per_credit": 4800000,
+        "lab_fee": 900000,
+        "material_fee": 300000
+      }
+    },
+    {
+      "course_code": "BUS2500",
+      "title": "Business Analytics",
+      "aliases": [
+        "Business Analytics",
+        "BA"
+      ],
+      "department": "College of Business and Management",
+      "credits": 3,
+      "level": "undergraduate",
+      "description": "Using data and dashboards to support management decisions.",
+      "prerequisites": [
+        "MATH1010"
+      ],
+      "recommended_background": [],
+      "tags": [
+        "business",
+        "analytics",
+        "dashboard"
+      ],
+      "sections": [
+        {
+          "section_id": "BUS2500-01",
+          "instructor": "Dr. Le Anh",
+          "schedule": [
+            {
+              "day": "Tuesday",
+              "start": "14:00",
+              "end": "15:30",
+              "room": "B-202"
+            },
+            {
+              "day": "Thursday",
+              "start": "14:00",
+              "end": "15:30",
+              "room": "B-202"
+            }
+          ],
+          "capacity": 50,
+          "enrolled": 20,
+          "waitlist_capacity": 10,
+          "waitlisted": 0,
+          "reserved_seats": {},
+          "status": "open"
+        }
+      ],
+      "tuition": {
+        "domestic_per_credit": 2500000,
+        "international_per_credit": 3800000,
+        "lab_fee": 0,
+        "material_fee": 150000
+      }
+    },
+    {
+      "course_code": "RAG4020",
+      "title": "Retrieval-Augmented Generation Systems",
+      "aliases": [
+        "RAG",
+        "Retrieval Augmented Generation",
+        "RAG Systems"
+      ],
+      "department": "College of Engineering and Computer Science",
+      "credits": 3,
+      "level": "undergraduate",
+      "description": "Designing retrieval, ranking, grounding, and evaluation pipelines for LLM applications.",
+      "prerequisites": [
+        "AI3010",
+        "DATA3020"
+      ],
+      "recommended_background": [
+        "ML4010"
+      ],
+      "tags": [
+        "llm",
+        "rag",
+        "search",
+        "agents"
+      ],
+      "sections": [
+        {
+          "section_id": "RAG4020-01",
+          "instructor": "Dr. Vu Minh",
+          "schedule": [
+            {
+              "day": "Friday",
+              "start": "13:00",
+              "end": "16:00",
+              "room": "I-508"
+            }
+          ],
+          "capacity": 25,
+          "enrolled": 12,
+          "waitlist_capacity": 5,
+          "waitlisted": 0,
+          "reserved_seats": {
+            "Computer Science": 5
+          },
+          "status": "open"
+        }
+      ],
+      "tuition": {
+        "domestic_per_credit": 3400000,
+        "international_per_credit": 5100000,
+        "lab_fee": 1200000,
+        "material_fee": 300000
+      }
+    },
+    {
+      "course_code": "DS4990",
+      "title": "Data Science Capstone",
+      "aliases": [
+        "Capstone",
+        "Data Capstone",
+        "DS Capstone"
+      ],
+      "department": "College of Engineering and Computer Science",
+      "credits": 5,
+      "level": "undergraduate",
+      "description": "Team-based applied analytics project with an external or university partner.",
+      "prerequisites": [
+        "DATA3020",
+        "ML4010"
+      ],
+      "recommended_background": [
+        "RAG4020"
+      ],
+      "tags": [
+        "capstone",
+        "project",
+        "data-science"
+      ],
+      "sections": [
+        {
+          "section_id": "DS4990-01",
+          "instructor": "Dr. Nguyen Linh",
+          "schedule": [
+            {
+              "day": "Wednesday",
+              "start": "14:00",
+              "end": "17:00",
+              "room": "I-601"
+            }
+          ],
+          "capacity": 20,
+          "enrolled": 0,
+          "waitlist_capacity": 0,
+          "waitlisted": 0,
+          "reserved_seats": {},
+          "status": "cancelled"
+        }
+      ],
+      "tuition": {
+        "domestic_per_credit": 3500000,
+        "international_per_credit": 5200000,
+        "lab_fee": 1500000,
+        "material_fee": 500000
+      }
+    },
+    {
+      "course_code": "DB3010",
+      "title": "Database Systems",
+      "aliases": [
+        "Database",
+        "Databases",
+        "DB",
+        "Database Systems"
+      ],
+      "department": "College of Engineering and Computer Science",
+      "credits": 3,
+      "level": "undergraduate",
+      "description": "Relational modeling, SQL, transactions, indexing, and database-backed application design.",
+      "prerequisites": [
+        "COMP1010"
+      ],
+      "recommended_background": [
+        "DATA1010"
+      ],
+      "tags": [
+        "database",
+        "sql",
+        "backend",
+        "systems"
+      ],
+      "sections": [
+        {
+          "section_id": "DB3010-01",
+          "instructor": "Dr. Hoang Nam",
+          "schedule": [
+            {
+              "day": "Monday",
+              "start": "14:00",
+              "end": "15:30",
+              "room": "I-402"
+            },
+            {
+              "day": "Wednesday",
+              "start": "14:00",
+              "end": "15:30",
+              "room": "I-402"
+            }
+          ],
+          "capacity": 40,
+          "enrolled": 18,
+          "waitlist_capacity": 10,
+          "waitlisted": 0,
+          "reserved_seats": {},
+          "status": "open"
+        },
+        {
+          "section_id": "DB3010-L1",
+          "instructor": "TA Team",
+          "schedule": [
+            {
+              "day": "Friday",
+              "start": "09:00",
+              "end": "11:00",
+              "room": "Lab-2"
+            }
+          ],
+          "capacity": 25,
+          "enrolled": 25,
+          "waitlist_capacity": 5,
+          "waitlisted": 3,
+          "reserved_seats": {},
+          "status": "waitlist_only"
+        }
+      ],
+      "tuition": {
+        "domestic_per_credit": 2900000,
+        "international_per_credit": 4300000,
+        "lab_fee": 600000,
+        "material_fee": 150000
+      }
+    },
+    {
+      "course_code": "NLP4010",
+      "title": "Natural Language Processing",
+      "aliases": [
+        "NLP",
+        "Natural Language Processing",
+        "Language AI"
+      ],
+      "department": "College of Engineering and Computer Science",
+      "credits": 4,
+      "level": "undergraduate",
+      "description": "Text processing, embeddings, sequence models, transformers, and evaluation for language applications.",
+      "prerequisites": [
+        "AI3010",
+        "STAT2010"
+      ],
+      "recommended_background": [
+        "ML4010"
+      ],
+      "tags": [
+        "ai",
+        "nlp",
+        "llm",
+        "transformers"
+      ],
+      "sections": [
+        {
+          "section_id": "NLP4010-01",
+          "instructor": "Dr. Do Quynh",
+          "schedule": [
+            {
+              "day": "Tuesday",
+              "start": "10:30",
+              "end": "12:30",
+              "room": "I-503"
+            },
+            {
+              "day": "Thursday",
+              "start": "10:30",
+              "end": "12:30",
+              "room": "I-503"
+            }
+          ],
+          "capacity": 30,
+          "enrolled": 27,
+          "waitlist_capacity": 8,
+          "waitlisted": 1,
+          "reserved_seats": {
+            "Computer Science": 2,
+            "Data Science": 2
+          },
+          "status": "open"
+        }
+      ],
+      "tuition": {
+        "domestic_per_credit": 3300000,
+        "international_per_credit": 5000000,
+        "lab_fee": 1000000,
+        "material_fee": 300000
+      }
+    },
+    {
+      "course_code": "ETH2100",
+      "title": "Data Ethics and AI Governance",
+      "aliases": [
+        "Data Ethics",
+        "AI Ethics",
+        "AI Governance",
+        "Ethics"
+      ],
+      "department": "College of Arts and Sciences",
+      "credits": 2,
+      "level": "undergraduate",
+      "description": "Ethical, legal, and governance issues in data-driven and AI-enabled systems.",
+      "prerequisites": [],
+      "recommended_background": [],
+      "tags": [
+        "ethics",
+        "policy",
+        "ai-governance",
+        "society"
+      ],
+      "sections": [
+        {
+          "section_id": "ETH2100-01",
+          "instructor": "Dr. Mai Lan",
+          "schedule": [
+            {
+              "day": "Friday",
+              "start": "10:00",
+              "end": "12:00",
+              "room": "C-110"
+            }
+          ],
+          "capacity": 60,
+          "enrolled": 9,
+          "waitlist_capacity": 0,
+          "waitlisted": 0,
+          "reserved_seats": {},
+          "status": "open"
+        },
+        {
+          "section_id": "ETH2100-02",
+          "instructor": "Dr. Mai Lan",
+          "schedule": [
+            {
+              "day": "Friday",
+              "start": "13:00",
+              "end": "15:00",
+              "room": "C-110"
+            }
+          ],
+          "capacity": 60,
+          "enrolled": 0,
+          "waitlist_capacity": 0,
+          "waitlisted": 0,
+          "reserved_seats": {},
+          "status": "not_yet_open"
+        }
+      ],
+      "tuition": {
+        "domestic_per_credit": 1800000,
+        "international_per_credit": 2700000,
+        "lab_fee": 0,
+        "material_fee": 100000
+      }
+    },
+    {
+      "course_code": "CLOUD3500",
+      "title": "Cloud Computing for AI Applications",
+      "aliases": [
+        "Cloud",
+        "Cloud Computing",
+        "Cloud AI",
+        "AI Cloud"
+      ],
+      "department": "College of Engineering and Computer Science",
+      "credits": 3,
+      "level": "undergraduate",
+      "description": "Cloud infrastructure, APIs, container deployment, monitoring, and cost-aware AI application hosting.",
+      "prerequisites": [
+        "COMP1010",
+        "DB3010"
+      ],
+      "recommended_background": [
+        "AI3010"
+      ],
+      "tags": [
+        "cloud",
+        "deployment",
+        "api",
+        "monitoring"
+      ],
+      "sections": [
+        {
+          "section_id": "CLOUD3500-01",
+          "instructor": "Dr. Vo Huy",
+          "schedule": [
+            {
+              "day": "Monday",
+              "start": "16:00",
+              "end": "17:30",
+              "room": "I-505"
+            },
+            {
+              "day": "Wednesday",
+              "start": "16:00",
+              "end": "17:30",
+              "room": "I-505"
+            }
+          ],
+          "capacity": 32,
+          "enrolled": 31,
+          "waitlist_capacity": 8,
+          "waitlisted": 0,
+          "reserved_seats": {},
+          "status": "open"
+        }
+      ],
+      "tuition": {
+        "domestic_per_credit": 3100000,
+        "international_per_credit": 4700000,
+        "lab_fee": 1100000,
+        "material_fee": 250000
+      }
+    }
+  ],
+  "registrations": [
+    {
+      "registration_id": "REG-2026-0001",
+      "student_id": "2A202600713",
+      "section_id": "COMP2030-01",
+      "course_code": "COMP2030",
+      "status": "registered",
+      "registered_at": "2026-05-21T10:15:00+07:00",
+      "payment_status": "paid"
+    },
+    {
+      "registration_id": "REG-2026-0002",
+      "student_id": "2A202601102",
+      "section_id": "BUS1010-02",
+      "course_code": "BUS1010",
+      "status": "registered",
+      "registered_at": "2026-05-22T09:30:00+07:00",
+      "payment_status": "pending"
+    },
+    {
+      "registration_id": "REG-2026-0003",
+      "student_id": "2A202600845",
+      "section_id": "AI3010-02",
+      "course_code": "AI3010",
+      "status": "waitlisted",
+      "registered_at": "2026-05-28T16:45:00+07:00",
+      "payment_status": "not_required"
+    }
+  ],
+  "registration_rules": {
+    "max_credits_per_term": 18,
+    "min_credits_full_time": 12,
+    "allow_waitlist": true,
+    "block_registration_when_account_status": [
+      "blocked",
+      "suspended"
+    ],
+    "block_registration_when_holds": [
+      "FINANCE_BALANCE",
+      "ACADEMIC_PROBATION_REVIEW"
+    ],
+    "require_prerequisites": true,
+    "prevent_time_conflicts": true,
+    "payment_required_for_final_registration": true
+  },
+  "sample_queries": [
+    {
+      "query": "Tôi muốn đăng ký môn AI và Data Science, kiểm tra còn chỗ không và học phí tổng cộng?",
+      "expected_course_codes": [
+        "AI3010",
+        "DATA3020"
+      ],
+      "suggested_student_id": "2A202600713",
+      "expected_tool_path": [
+        "check_slots",
+        "get_tuition",
+        "register"
+      ]
+    },
+    {
+      "query": "Can I take Machine Learning this semester?",
+      "expected_course_codes": [
+        "ML4010"
+      ],
+      "suggested_student_id": "2A202600713",
+      "expected_edge_case": "course_full_and_prerequisite_missing"
+    },
+    {
+      "query": "Register me for the Data Science Capstone.",
+      "expected_course_codes": [
+        "DS4990"
+      ],
+      "suggested_student_id": "2A202600845",
+      "expected_edge_case": "cancelled_section"
+    },
+    {
+      "query": "I am an international student. How much is Business Analytics tuition?",
+      "expected_course_codes": [
+        "BUS2500"
+      ],
+      "suggested_student_id": "2A202601102",
+      "expected_edge_case": "international_tuition_category"
+    }
+  ]
+}
