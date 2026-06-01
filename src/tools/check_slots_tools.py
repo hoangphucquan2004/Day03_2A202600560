@@ -42,6 +42,13 @@ def _course_search_text(course: Dict[str, Any]) -> str:
     return " | ".join(_normalize(value) for value in values)
 
 
+def _contains_phrase(text: str, phrase: str) -> bool:
+    """Return True when phrase appears as normalized word sequence."""
+    if not phrase:
+        return False
+    return re.search(rf"(^|\s){re.escape(phrase)}($|\s)", text) is not None
+
+
 def _find_courses(course_query: Any) -> List[Dict[str, Any]]:
     """Find courses matching the given query."""
     data = _load_data()
@@ -52,10 +59,15 @@ def _find_courses(course_query: Any) -> List[Dict[str, Any]]:
     for query in queries:
         normalized_query = _normalize(query)
         for course in data["courses"]:
+            aliases = [_normalize(alias) for alias in course.get("aliases", [])]
+            course_code = _normalize(course["course_code"])
+            title = _normalize(course["title"])
             search_text = _course_search_text(course)
-            code_match = normalized_query == _normalize(course["course_code"])
-            alias_match = normalized_query in [_normalize(alias) for alias in course.get("aliases", [])]
-            title_match = normalized_query == _normalize(course["title"])
+            code_match = normalized_query == course_code or _contains_phrase(normalized_query, course_code)
+            alias_match = normalized_query in aliases or any(
+                _contains_phrase(normalized_query, alias) for alias in aliases
+            )
+            title_match = normalized_query == title or _contains_phrase(normalized_query, title)
             substring_match = normalized_query and normalized_query in search_text
 
             if code_match or alias_match or title_match or substring_match:

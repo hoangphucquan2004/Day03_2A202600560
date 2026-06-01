@@ -49,8 +49,10 @@ def run() -> Dict[str, Any]:
                 'Action: check_slots({"course_query": ["AI", "Data Science"]})',
                 'Thought: I found available sections and now need the exact tuition.\n'
                 'Action: get_tuition({"course_code": ["AI3010", "DATA3020"], "student_id": "2A202600713"})',
-                "Thought: I have both tool observations.\n"
-                "Final Answer: AI3010 and DATA3020 have available sections. "
+                'Thought: Tuition is clear, so I can register the selected sections.\n'
+                'Action: register({"student_id": "2A202600713", "section_ids": ["AI3010-01", "DATA3020-02"], "confirm_payment": true})',
+                "Thought: I have slot, tuition, and registration observations.\n"
+                "Final Answer: AI3010-01 and DATA3020-02 were registered successfully. "
                 "For student 2A202600713, the estimated total tuition and fees are 19,150,000 VND.",
             ],
         ),
@@ -82,8 +84,8 @@ def run() -> Dict[str, Any]:
                 "query": query,
                 "answer": agent_answer,
                 "uses_tools": True,
-                "tools": ["check_slots", "get_tuition"],
-                "success": "19,150,000 VND" in agent_answer,
+                "tools": ["check_slots", "get_tuition", "register"],
+                "success": "registered successfully" in agent_answer and "19,150,000 VND" in agent_answer,
             },
             {
                 "name": "agent_failure_trace",
